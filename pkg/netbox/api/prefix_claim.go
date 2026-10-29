@@ -238,9 +238,11 @@ func (c *NetboxCompositeClient) isParentPrefixCandidate(ctx context.Context, pre
 
 // resolveParentPrefix validates the claim and returns the NetBox ID of its parent prefix
 func (c *NetboxCompositeClient) resolveParentPrefix(ctx context.Context, prefixClaim *models.PrefixClaim) (int32, error) {
-	_, err := c.getTenantDetails(prefixClaim.Metadata.Tenant)
-	if err != nil {
-		return 0, err
+	if prefixClaim.Metadata.Tenant != "" {
+		_, err := c.getTenantDetails(prefixClaim.Metadata.Tenant)
+		if err != nil {
+			return 0, err
+		}
 	}
 
 	// Don't assign an prefix if the requested site doesn't exist in netbox
